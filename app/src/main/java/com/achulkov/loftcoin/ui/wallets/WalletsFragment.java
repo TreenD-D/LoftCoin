@@ -41,6 +41,7 @@ public class WalletsFragment extends Fragment {
         final int padding = (int) (displayMetrics.widthPixels - value.getDimension(displayMetrics)) / 2;
         binding.recycler.setPadding(padding, 0, padding, 0);
         binding.recycler.setClipToPadding(false);
+        binding.recycler.setHasFixedSize(true);
 
         binding.recycler.addOnScrollListener(new CarouselScroller());
 
