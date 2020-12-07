@@ -55,6 +55,7 @@ public class RatesFragment extends Fragment {
         binding.recycler.setLayoutManager(new LinearLayoutManager(view.getContext()));
         binding.recycler.swapAdapter(adapter, false);
         binding.recycler.setHasFixedSize(true);
+        binding.refresher.setOnRefreshListener(viewModel::refresh);
         viewModel.coins().observe(getViewLifecycleOwner(), adapter::submitList);
         viewModel.isRefreshing().observe(getViewLifecycleOwner(), binding.refresher::setRefreshing);
         currencyRepo.currency().observe(getViewLifecycleOwner(), (currency) -> {
@@ -84,5 +85,6 @@ public class RatesFragment extends Fragment {
         binding.recycler.swapAdapter(null, false);
         super.onDestroyView();
     }
+
 
 }
