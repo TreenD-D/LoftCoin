@@ -6,31 +6,42 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.achulkov.loftcoin.BaseComponent;
 import com.achulkov.loftcoin.R;
-import com.achulkov.loftcoin.data.Currency;
-import com.achulkov.loftcoin.data.CurrencyRepo;
-import com.achulkov.loftcoin.data.CurrencyRepoImpl;
 import com.achulkov.loftcoin.databinding.DialogCurrencyBinding;
 import com.achulkov.loftcoin.util.OnItemClick;
 
+import javax.inject.Inject;
+
 public class CurrencyDialog extends AppCompatDialogFragment {
+
+    private final CurrencyComponent component;
 
     private DialogCurrencyBinding binding;
 
-    private CurrencyRepo currencyRepo;
+    private CurrencyViewModel viewModel;
 
     private CurrencyAdapter adapter;
 
     private OnItemClick onItemClick;
 
+    @Inject
+    public CurrencyDialog(BaseComponent baseComponent) {
+        component = DaggerCurrencyComponent.builder()
+                .baseComponent(baseComponent)
+                .build();
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        currencyRepo = new CurrencyRepoImpl(requireContext());
+        viewModel = new ViewModelProvider(this, component.viewModelFactory())
+                .get(CurrencyViewModel.class);
         adapter = new CurrencyAdapter();
     }
 
@@ -39,9 +50,9 @@ public class CurrencyDialog extends AppCompatDialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         binding = DialogCurrencyBinding.inflate(getLayoutInflater());
         return new MaterialAlertDialogBuilder(requireActivity())
-            .setTitle(R.string.choose_currency)
-            .setView(binding.getRoot())
-            .create();
+                .setTitle(R.string.choose_currency)
+                .setView(binding.getRoot())
+                .create();
     }
 
     @Override
@@ -49,12 +60,11 @@ public class CurrencyDialog extends AppCompatDialogFragment {
         super.onActivityCreated(savedInstanceState);
         binding.recycler.setLayoutManager(new LinearLayoutManager(requireActivity()));
         binding.recycler.setAdapter(adapter);
-        currencyRepo.availableCurrencies().observe(this, adapter::submitList);
-        onItemClick = new OnItemClick(binding.recycler.getContext(), (v) -> {
+        viewModel.allCurrencies().observe(this, adapter::submitList);
+        onItemClick = new OnItemClick((v) -> {
             final RecyclerView.ViewHolder viewHolder = binding.recycler.findContainingViewHolder(v);
             if (viewHolder != null) {
-                final Currency item = adapter.getItem(viewHolder.getAdapterPosition());
-                currencyRepo.updateCurrency(item);
+                viewModel.updateCurrency(adapter.getItem(viewHolder.getAdapterPosition()));
             }
             dismissAllowingStateLoss();
         });

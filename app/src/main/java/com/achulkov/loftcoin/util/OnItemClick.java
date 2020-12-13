@@ -1,36 +1,30 @@
 package com.achulkov.loftcoin.util;
 
-import android.content.Context;
-import android.view.GestureDetector;
+import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 
 import androidx.annotation.NonNull;
-import androidx.core.view.GestureDetectorCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class OnItemClick implements RecyclerView.OnItemTouchListener {
 
-    private final GestureDetectorCompat gestureDetector;
-
     private final View.OnClickListener listener;
 
-    public OnItemClick(@NonNull Context context, @NonNull View.OnClickListener listener) {
-        this.gestureDetector = new GestureDetectorCompat(context,
-            new GestureDetector.SimpleOnGestureListener() {
-                @Override
-                public boolean onSingleTapUp(MotionEvent e) {
-                    return true;
-                }
-            });
+    private long downTime;
+
+    public OnItemClick(@NonNull View.OnClickListener listener) {
         this.listener = listener;
     }
 
     @Override
     public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-        final View view = rv.findChildViewUnder(e.getX(), e.getY());
-        if (view != null && gestureDetector.onTouchEvent(e)) {
-            listener.onClick(view);
+        if (isSingleTap(e)) {
+            final View view = rv.findChildViewUnder(e.getX(), e.getY());
+            if (view != null) {
+                listener.onClick(view);
+            }
         }
         return false;
     }
@@ -41,6 +35,15 @@ public class OnItemClick implements RecyclerView.OnItemTouchListener {
 
     @Override
     public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+    }
+
+    private boolean isSingleTap(MotionEvent e) {
+        if (MotionEvent.ACTION_DOWN == e.getActionMasked()) {
+            downTime = SystemClock.uptimeMillis();
+        } else if (MotionEvent.ACTION_UP == e.getActionMasked()) {
+            return e.getEventTime() - downTime <= ViewConfiguration.getTapTimeout();
+        }
+        return false;
     }
 
 }
