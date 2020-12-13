@@ -18,6 +18,9 @@ abstract class CoinsDao {
     @Query("SELECT * FROM RoomCoin ORDER BY price DESC")
     abstract LiveData<List<RoomCoin>> fetchAllSortByPrice();
 
+    @Query("SELECT * FROM RoomCoin ORDER BY price ASC")
+    abstract LiveData<List<RoomCoin>> fetchAllSortByPriceAsc();
+
     @Query("SELECT * FROM RoomCoin ORDER BY rank ASC")
     abstract LiveData<List<RoomCoin>> fetchAllSortByRank();
 

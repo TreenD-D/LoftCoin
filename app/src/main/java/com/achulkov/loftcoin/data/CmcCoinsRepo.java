@@ -44,7 +44,7 @@ class CmcCoinsRepo implements CoinsRepo {
         if (query.sortBy() == SortBy.PRICE) {
             coins = db.coins().fetchAllSortByPrice();
         } else {
-            coins = db.coins().fetchAllSortByRank();
+            coins = db.coins().fetchAllSortByPriceAsc();
         }
         return Transformations.map(coins, ArrayList::new);
     }
