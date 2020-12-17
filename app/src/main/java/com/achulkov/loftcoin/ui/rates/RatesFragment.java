@@ -58,7 +58,9 @@ public class RatesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
         binding = FragmentRatesBinding.bind(view);
-        binding.recycler.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
+        layoutManager.setReverseLayout(true);
+        binding.recycler.setLayoutManager(layoutManager);
         binding.recycler.setAdapter(adapter);
         binding.recycler.setHasFixedSize(true);
         binding.refresher.setOnRefreshListener(viewModel::refresh);
@@ -81,6 +83,7 @@ public class RatesFragment extends Fragment {
             return true;
         } else if (R.id.sort_dialog == item.getItemId()) {
             viewModel.switchSortingOrder();
+            binding.recycler.scrollToPosition(0);
             return true;
         }
         return super.onOptionsItemSelected(item);

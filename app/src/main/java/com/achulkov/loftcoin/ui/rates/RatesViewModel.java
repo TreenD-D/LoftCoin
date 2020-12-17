@@ -26,7 +26,7 @@ public class RatesViewModel extends ViewModel {
 
     private final LiveData<List<Coin>> coins;
 
-    private int sortingIndex = 1;
+    private int sortingIndex = 0;
 
     // AppComponent(BaseComponent) -> MainComponent -> Fragment(BaseComponent) -> RatesComponent -> RatesViewModel()
 
