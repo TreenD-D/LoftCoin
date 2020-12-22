@@ -1,4 +1,4 @@
-package com.achulkov.loftcoin.util;
+package com.achulkov.loftcoin.widget;
 
 import android.os.SystemClock;
 import android.view.MotionEvent;

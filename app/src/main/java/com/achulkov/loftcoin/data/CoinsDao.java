@@ -1,11 +1,13 @@
 package com.achulkov.loftcoin.data;
 
 import androidx.annotation.WorkerThread;
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+
+import io.reactivex.Observable;
+import io.reactivex.Single;
 
 import java.util.List;
 
@@ -13,16 +15,25 @@ import java.util.List;
 abstract class CoinsDao {
 
     @Query("SELECT * FROM RoomCoin")
-    abstract LiveData<List<RoomCoin>> fetchAll();
+    abstract Observable<List<RoomCoin>> fetchAll();
 
     @Query("SELECT * FROM RoomCoin ORDER BY price DESC")
-    abstract LiveData<List<RoomCoin>> fetchAllSortByPrice();
+    abstract Observable<List<RoomCoin>> fetchAllSortByPrice();
 
     @Query("SELECT * FROM RoomCoin ORDER BY price ASC")
-    abstract LiveData<List<RoomCoin>> fetchAllSortByPriceAsc();
+    abstract Observable<List<RoomCoin>> fetchAllSortByPriceAsc();
 
     @Query("SELECT * FROM RoomCoin ORDER BY rank ASC")
-    abstract LiveData<List<RoomCoin>> fetchAllSortByRank();
+    abstract Observable<List<RoomCoin>> fetchAllSortByRank();
+
+    @Query("SELECT * FROM RoomCoin WHERE id=:id")
+    abstract Single<RoomCoin> fetchOne(long id);
+
+    @Query("SELECT * FROM RoomCoin WHERE id NOT IN (:ids) ORDER BY rank ASC LIMIT 1")
+    abstract Single<RoomCoin> nextPopularCoin(List<Integer> ids);
+
+    @Query("SELECT * FROM RoomCoin ORDER BY rank ASC LIMIT :limit")
+    abstract Observable<List<RoomCoin>> fetchTop(int limit);
 
     @WorkerThread
     @Query("SELECT COUNT(id) FROM RoomCoin")

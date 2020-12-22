@@ -16,7 +16,7 @@ import com.achulkov.loftcoin.R;
 import com.achulkov.loftcoin.data.Coin;
 import com.achulkov.loftcoin.databinding.LiRateBinding;
 import com.achulkov.loftcoin.util.ImageLoader;
-import com.achulkov.loftcoin.util.OutlineCircle;
+import com.achulkov.loftcoin.widget.OutlineCircle;
 import com.achulkov.loftcoin.util.PercentFormatter;
 import com.achulkov.loftcoin.util.PriceFormatter;
 
