@@ -29,6 +29,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
+import timber.log.Timber;
 
 public class WalletsFragment extends Fragment {
 
@@ -94,6 +95,7 @@ public class WalletsFragment extends Fragment {
         binding.recycler.setAdapter(walletsAdapter);
 
         disposable.add(viewModel.wallets().subscribe(walletsAdapter::submitList));
+//        disposable.add(viewModel.wallets().subscribe(walletsAdapter::submitList, e -> Timber.d(e.getMessage())));
         disposable.add(viewModel.wallets().map(List::isEmpty).subscribe((isEmpty) -> {
             binding.walletCard.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
             binding.recycler.setVisibility(isEmpty ? View.GONE : View.VISIBLE);

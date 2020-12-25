@@ -12,6 +12,7 @@ import javax.inject.Singleton;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import timber.log.Timber;
 
 import java.util.Collections;
 
@@ -49,8 +50,8 @@ class CmcCoinsRepo implements CoinsRepo {
     @Override
     public Single<Coin> coin(@NonNull Currency currency, long id) {
         return listings(Query.builder().currency(currency.code()).forceUpdate(false).build())
-                .switchMapSingle((coins) -> db.coins().fetchOne(id))
                 .firstOrError()
+                .flatMap((coins) -> db.coins().fetchOne(id))
                 .map((coin) -> coin);
     }
 
@@ -58,8 +59,9 @@ class CmcCoinsRepo implements CoinsRepo {
     @Override
     public Single<Coin> nextPopularCoin(@NonNull Currency currency, List<Integer> ids) {
         return listings(Query.builder().currency(currency.code()).forceUpdate(false).build())
-                .switchMapSingle((coins) -> db.coins().nextPopularCoin(ids))
                 .firstOrError()
+                .doOnSuccess((c) -> Timber.d("%s", c.size()))
+                .flatMap((coins) -> db.coins().nextPopularCoin(ids))
                 .map((coin) -> coin);
     }
 
@@ -75,7 +77,7 @@ class CmcCoinsRepo implements CoinsRepo {
         if (query.sortBy() == SortBy.PRICE) {
             return db.coins().fetchAllSortByPrice();
         } else {
-            return db.coins().fetchAllSortByRank();
+            return db.coins().fetchAllSortByPriceAsc();
         }
     }
 

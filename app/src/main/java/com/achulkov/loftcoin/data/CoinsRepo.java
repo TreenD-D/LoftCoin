@@ -30,7 +30,7 @@ public interface CoinsRepo {
         public static Builder builder() {
             return new AutoValue_CoinsRepo_Query.Builder()
                     .forceUpdate(true)
-                    .sortBy(SortBy.PRICE);
+                    .sortBy(SortBy.PRICE_ASC);
         }
 
         abstract String currency();

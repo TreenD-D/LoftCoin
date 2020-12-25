@@ -29,7 +29,7 @@ public class RatesViewModel extends ViewModel {
 
     private final Subject<Class<?>> pullToRefresh = BehaviorSubject.createDefault(Void.TYPE);
 
-    private final Subject<SortBy> sortBy = BehaviorSubject.createDefault(SortBy.PRICE);
+    private final Subject<SortBy> sortBy = BehaviorSubject.createDefault(SortBy.PRICE_ASC);
 
     private final Subject<Throwable> error = PublishSubject.create();
 

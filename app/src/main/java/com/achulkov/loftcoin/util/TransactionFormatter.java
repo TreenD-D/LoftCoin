@@ -2,31 +2,31 @@ package com.achulkov.loftcoin.util;
 
 import androidx.annotation.NonNull;
 
+import com.achulkov.loftcoin.data.Transaction;
 import com.achulkov.loftcoin.data.Wallet;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
-import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class BalanceFormatter implements Formatter<Wallet> {
+public class TransactionFormatter implements Formatter<Transaction> {
 
     @Inject
-    BalanceFormatter() {
+    TransactionFormatter() {
     }
 
     @NonNull
     @Override
-    public String format(@NonNull Wallet value) {
+    public String format(@NonNull Transaction transaction) {
         final DecimalFormat format = (DecimalFormat) NumberFormat.getCurrencyInstance();
         final DecimalFormatSymbols symbols = format.getDecimalFormatSymbols();
-        symbols.setCurrencySymbol(value.coin().symbol());
+        symbols.setCurrencySymbol(transaction.coin().symbol());
         format.setDecimalFormatSymbols(symbols);
-        return format.format(value.balance());
+        return format.format(transaction.amount());
     }
 
 }
