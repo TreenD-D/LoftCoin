@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.snackbar.Snackbar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -18,13 +19,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.achulkov.loftcoin.BaseComponent;
 import com.achulkov.loftcoin.R;
 import com.achulkov.loftcoin.databinding.FragmentRatesBinding;
-import com.achulkov.loftcoin.util.PriceFormatter;
+import io.reactivex.disposables.CompositeDisposable;
+
 
 import javax.inject.Inject;
 
 public class RatesFragment extends Fragment {
 
     private final RatesComponent component;
+
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     private FragmentRatesBinding binding;
 
@@ -58,12 +62,19 @@ public class RatesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
         binding = FragmentRatesBinding.bind(view);
-        binding.recycler.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
+        layoutManager.setReverseLayout(true);
+        binding.recycler.setLayoutManager(layoutManager);
         binding.recycler.setAdapter(adapter);
         binding.recycler.setHasFixedSize(true);
         binding.refresher.setOnRefreshListener(viewModel::refresh);
-        viewModel.coins().observe(getViewLifecycleOwner(), adapter::submitList);
-        viewModel.isRefreshing().observe(getViewLifecycleOwner(), binding.refresher::setRefreshing);
+        disposable.add(viewModel.coins().subscribe(adapter::submitList));
+        disposable.add(viewModel.onError().subscribe(e -> {
+            Snackbar.make(view, e.getMessage(), Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Retry", v -> viewModel.retry())
+                    .show();
+        }));
+        disposable.add(viewModel.isRefreshing().subscribe(binding.refresher::setRefreshing));
     }
 
     @Override
@@ -81,6 +92,7 @@ public class RatesFragment extends Fragment {
             return true;
         } else if (R.id.sort_dialog == item.getItemId()) {
             viewModel.switchSortingOrder();
+            binding.recycler.scrollToPosition(0);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -89,6 +101,7 @@ public class RatesFragment extends Fragment {
     @Override
     public void onDestroyView() {
         binding.recycler.setAdapter(null);
+        disposable.clear();
         super.onDestroyView();
     }
 

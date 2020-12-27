@@ -27,6 +27,7 @@
         <item name="actionBarPopupTheme">@style/AppTheme.PopupOverlay</item>
 
         <item name="bottomNavigationStyle">@style/AppTheme.BottomNavigationView</item>
+        <item name="bottomSheetDialogTheme">@style/AppTheme.BottomSheet.Dialog</item>
 
         <item name="buttonWelcome">@style/Widget.AppTheme.Button.Welcome</item>
         <item name="walletCardBackground">@color/dark_five</item>
@@ -34,6 +35,10 @@
         <item name="walletCardHeight">160dp</item>
         <item name="textNegative">@color/watermelon</item>
         <item name="textPositive">@color/weird_green</item>
+    </style>
+
+    <style name="AppTheme.BottomSheet.Dialog" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="colorSurface">@color/dark_four</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">

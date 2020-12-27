@@ -4,6 +4,8 @@ import android.app.Application;
 import android.os.StrictMode;
 
 import com.achulkov.loftcoin.util.DebugTree;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import timber.log.Timber;
 
@@ -21,6 +23,9 @@ public class LoftApp extends Application {
         component = DaggerAppComponent.builder()
                 .application(this)
                 .build();
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> {
+            Timber.d("fcm: %s", instanceIdResult.getToken());
+        });
     }
 
     public BaseComponent getComponent() {
