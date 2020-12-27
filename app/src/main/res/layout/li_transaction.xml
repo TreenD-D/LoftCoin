@@ -10,9 +10,10 @@
         android:id="@+id/amount1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="19dp"
         android:textAppearance="?attr/textAppearanceHeadline3"
         app:layout_constraintEnd_toStartOf="@+id/timestamp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/check"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="123 BTC" />
 
@@ -20,10 +21,11 @@
         android:id="@+id/amount2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="19dp"
         android:layout_marginTop="8dp"
         android:textAppearance="?attr/textAppearanceHeadline4"
         android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/check"
         app:layout_constraintTop_toBottomOf="@+id/amount1"
         tools:text="+ 1.23 $" />
 
@@ -37,5 +39,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/amount1"
         tools:text="@tools:sample/date/ddmmyy" />
+
+    <ImageView
+        android:id="@+id/check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="5dp"
+        android:checkable="false"
+        android:clickable="false"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/transaction_selector" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

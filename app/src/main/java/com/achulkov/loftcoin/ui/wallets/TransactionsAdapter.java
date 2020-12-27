@@ -27,9 +27,9 @@ class TransactionsAdapter extends ListAdapter<Transaction, TransactionsAdapter.V
 
     private LayoutInflater inflater;
 
-    private int colorNegative = Color.RED;
+    private final int colorNegative = Color.RED;
 
-    private int colorPositive = Color.GREEN;
+    private final int colorPositive = Color.GREEN;
 
     @Inject
     TransactionsAdapter(PriceFormatter priceFormatter, TransactionFormatter transactionFormatter) {
@@ -63,8 +63,10 @@ class TransactionsAdapter extends ListAdapter<Transaction, TransactionsAdapter.V
         holder.binding.amount2.setText(priceFormatter.format(transaction.coin().currencyCode(), fiatAmount));
         if (transaction.amount() > 0) {
             holder.binding.amount2.setTextColor(colorPositive);
+            holder.binding.check.setEnabled(true);
         } else {
             holder.binding.amount2.setTextColor(colorNegative);
+            holder.binding.check.setEnabled(false);
         }
         holder.binding.timestamp.setText(DateFormat.getDateFormat(inflater.getContext()).format(transaction.createdAt()));
     }

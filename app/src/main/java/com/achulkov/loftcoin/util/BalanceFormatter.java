@@ -4,9 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.achulkov.loftcoin.data.Wallet;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -22,11 +19,7 @@ public class BalanceFormatter implements Formatter<Wallet> {
     @NonNull
     @Override
     public String format(@NonNull Wallet value) {
-        final DecimalFormat format = (DecimalFormat) NumberFormat.getCurrencyInstance();
-        final DecimalFormatSymbols symbols = format.getDecimalFormatSymbols();
-        symbols.setCurrencySymbol(value.coin().symbol());
-        format.setDecimalFormatSymbols(symbols);
-        return format.format(value.balance());
+        return String.format(Locale.getDefault(),"%.2f %s",value.balance(),value.coin().symbol());
     }
 
 }
